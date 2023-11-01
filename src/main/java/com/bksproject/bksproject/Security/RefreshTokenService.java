@@ -3,12 +3,11 @@ package com.bksproject.bksproject.Security;
 import com.bksproject.bksproject.Model.RefreshToken;
 import com.bksproject.bksproject.Repository.RefreshTokenRepository;
 import com.bksproject.bksproject.Repository.UserRepository;
-import com.bksproject.bksproject.exception.TokenRefreshException;
+import com.bksproject.bksproject.exception.Token.TokenRefreshException;
 import jakarta.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;

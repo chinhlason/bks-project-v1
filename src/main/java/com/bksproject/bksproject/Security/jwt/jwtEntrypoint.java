@@ -17,6 +17,7 @@ import java.io.OutputStream;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
+
 @Component
 public class jwtEntrypoint implements AuthenticationEntryPoint {
     public static final String FORBIDDEN_MESSAGE = "You need to log in to access this page";

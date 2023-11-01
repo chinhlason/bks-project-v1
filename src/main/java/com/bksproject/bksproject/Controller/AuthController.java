@@ -13,13 +13,15 @@ import com.bksproject.bksproject.Security.Cookie.cookieService;
 import com.bksproject.bksproject.Security.RefreshTokenService;
 import com.bksproject.bksproject.Security.jwt.jwtUtil;
 import com.bksproject.bksproject.Service.UserDetailsImp;
-import com.bksproject.bksproject.exception.TokenRefreshException;
+import com.bksproject.bksproject.exception.System.WrongLoginInforException;
+import com.bksproject.bksproject.exception.Token.TokenRefreshException;
 import com.bksproject.bksproject.payload.response.LoginResponse;
 import com.bksproject.bksproject.payload.response.MessageResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.core.Authentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -89,7 +91,7 @@ public class AuthController {
     }
 
     @PostMapping("signin")
-    public ResponseEntity<?> login(@Valid @RequestBody LoginDTO loginDTO) {
+    public ResponseEntity<?> login(@Valid @RequestBody LoginDTO loginDTO) throws DisabledException {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         loginDTO.getUsername(),
