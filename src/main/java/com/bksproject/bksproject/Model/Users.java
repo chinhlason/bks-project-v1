@@ -1,6 +1,7 @@
 package com.bksproject.bksproject.Model;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -65,6 +66,9 @@ public class Users {
     @JsonManagedReference
     private Set<Role> roles = new HashSet<>();
 
+    @OneToMany(mappedBy = "user_post")
+    @JsonBackReference
+    private Set<Posts> posts;
 
 //    public User() {
 //    }

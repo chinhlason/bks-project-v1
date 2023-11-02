@@ -17,12 +17,11 @@ public class jwtUtil {
     public String generateToken(String username){
 //        String username = authentication.getName();
         Date currentDate = new Date();
-        Date expiryDate = new Date(currentDate.getTime() + jwtConstant.JWT_EXPIRATION);
 
         return Jwts.builder()
                 .setSubject(username)
                 .setIssuedAt(new Date())
-                .setExpiration(expiryDate)
+                .setExpiration(new Date((new Date()).getTime() + jwtConstant.JWT_EXPIRATION))
                 .signWith(SignatureAlgorithm.HS512, jwtConstant.JWT_SECRET)
                 .compact();
     }

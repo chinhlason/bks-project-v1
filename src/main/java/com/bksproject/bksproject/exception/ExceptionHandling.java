@@ -1,6 +1,7 @@
 package com.bksproject.bksproject.exception;
 
 import com.bksproject.bksproject.exception.System.EmailExistException;
+import com.bksproject.bksproject.exception.System.PostNotFoundException;
 import com.bksproject.bksproject.exception.System.UserNotFoundException;
 import com.bksproject.bksproject.exception.System.WrongLoginInforException;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -22,6 +23,7 @@ public class ExceptionHandling implements ErrorController {
     private static final String EMAIL_EXIST = "Email is already taken!";
     private static final String USER_NOT_FOUND = "User not found!";
     private static final String WRONG_INF_TO_LOGIN = "Username or password is incorrect!";
+    private static final String POST_NOT_FOUND = "Post not found";
 
 
     private ResponseEntity<HttpResponse> createHttpResponse(HttpStatus httpStatus, String message) {
@@ -49,5 +51,11 @@ public class ExceptionHandling implements ErrorController {
     public ResponseEntity<HttpResponse> wrongLoginInforException(BadCredentialsException exception) {
         LOGGER.warn(exception.getMessage());
         return createHttpResponse(BAD_REQUEST, WRONG_INF_TO_LOGIN);
+    }
+
+    @ExceptionHandler(PostNotFoundException.class)
+    public ResponseEntity<HttpResponse> postNotFoundException(PostNotFoundException exception) {
+        LOGGER.warn(exception.getMessage());
+        return createHttpResponse(BAD_REQUEST, POST_NOT_FOUND);
     }
 }
