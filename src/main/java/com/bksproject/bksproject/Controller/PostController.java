@@ -1,8 +1,11 @@
 package com.bksproject.bksproject.Controller;
 
+import com.bksproject.bksproject.DTO.CommentDTO;
 import com.bksproject.bksproject.DTO.PostDTO;
+import com.bksproject.bksproject.Model.Comments;
 import com.bksproject.bksproject.Model.Posts;
 import com.bksproject.bksproject.Model.Users;
+import com.bksproject.bksproject.Repository.CommentRepository;
 import com.bksproject.bksproject.Repository.PostRepository;
 import com.bksproject.bksproject.Repository.UserRepository;
 import com.bksproject.bksproject.Service.ModelMapperService;
@@ -12,11 +15,8 @@ import com.bksproject.bksproject.exception.System.PostNotFoundException;
 import com.bksproject.bksproject.exception.System.UserNotFoundException;
 import com.bksproject.bksproject.payload.request.UpdatePostRequest;
 import com.bksproject.bksproject.payload.request.UpdateUserRequest;
-import com.bksproject.bksproject.payload.response.HttpResponse;
+import com.bksproject.bksproject.payload.response.*;
 
-import com.bksproject.bksproject.payload.response.MessageResponse;
-import com.bksproject.bksproject.payload.response.PostResponse;
-import com.bksproject.bksproject.payload.response.UpdatePostResponse;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.annotation.security.PermitAll;
 import jakarta.persistence.*;
@@ -35,7 +35,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @CrossOrigin(origins = "http://localhost:3000",maxAge = 3600,allowCredentials = "true")
 @RestController
@@ -48,7 +50,10 @@ public class PostController {
     private PostRepository postRepository;
 
     @Autowired
-    ModelMapperService modelMapperService;
+    private ModelMapperService modelMapperService;
+
+    @Autowired
+    private CommentRepository commentRepository;
 
     @Autowired
     private ModelMapper mapper;
@@ -58,9 +63,10 @@ public class PostController {
 
     private Posts posts;
 
+
     @PostMapping("/post/create")
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
-    ResponseEntity<?> create(@Valid @RequestBody PostDTO postDTO, Authentication authentication) throws UserNotFoundException{
+    ResponseEntity<?> createPost(@Valid @RequestBody PostDTO postDTO, Authentication authentication) throws UserNotFoundException{
         String username = authentication.getName();
         Users user = userRepository.findByUsername(username).orElseThrow(() -> new UserNotFoundException(username));
         if(postDTO.getCategory().isEmpty()){
@@ -85,6 +91,7 @@ public class PostController {
     public ResponseEntity<?> getCurrentPost(@RequestParam("id") Long id) throws PostNotFoundException {
         String exception = "";
         Posts postCurrent = postRepository.findById(id).orElseThrow(() -> new PostNotFoundException(exception));
+        Set<CommentResponse> commentInPost = convertCommentsToCommentResponses(postCurrent.getPost_comments());
         return ResponseEntity.ok()
                 .body(
                         new PostResponse(
@@ -93,7 +100,8 @@ public class PostController {
                                 postCurrent.getCategory(),
                                 postCurrent.getTitle(),
                                 postCurrent.getContent(),
-                                postCurrent.getUser_post()
+                                postCurrent.getUser_post(),
+                                commentInPost
                         )
                 );
     }
@@ -129,5 +137,42 @@ public class PostController {
         return new ResponseEntity(new MessageResponse("Delete succesfully"),HttpStatus.OK);
     }
 
-}
+    @PostMapping("/post/comment")
+    public ResponseEntity<?> createComment(@Valid @RequestBody CommentDTO commentDTO, @RequestParam("id") Long postId,
+                                           Authentication authentication) throws UserNotFoundException, PostNotFoundException{
+        String username = authentication.getName();
+        String exception = "";
+        Users user = userRepository.findByUsername(username).orElseThrow(() -> new UserNotFoundException(username));
+        if(commentDTO.getContent().isEmpty()){
+            return ResponseEntity.badRequest().body(new HttpResponse(HttpStatus.BAD_REQUEST.value(),HttpStatus.BAD_REQUEST,"","Content can not be empty"));
+        }
+        Posts postComment = postRepository.findById(postId).orElseThrow(() -> new PostNotFoundException(exception));
+        Comments commentCreate = new Comments(commentDTO.getContent(), user, postComment);
+        commentRepository.save(commentCreate);
+        return new ResponseEntity(new MessageResponse("Comment created succesfully"),HttpStatus.OK);
+    }
 
+//    @GetMapping("/general/post/get-all-comment-in-post")
+//    public List<Comments> getCommentInCurrentPost(@RequestParam("id") Long postId) throws PostNotFoundException{
+//        String exception = "";
+//        Posts currentPost = postRepository.findById(postId).orElseThrow(() -> new PostNotFoundException(exception));
+//
+//    }
+
+
+    public static Set<CommentResponse> convertCommentsToCommentResponses(Set<Comments> comments) {
+        Set<CommentResponse> commentResponses = new HashSet<>();
+
+        for (Comments comment : comments) {
+            CommentResponse commentResponse = new CommentResponse(
+                    comment.getId(),
+                    comment.getCreateAt(),
+                    comment.getContent(),
+                    comment.getUserId()
+            );
+            commentResponses.add(commentResponse);
+        }
+
+        return commentResponses;
+    }
+}

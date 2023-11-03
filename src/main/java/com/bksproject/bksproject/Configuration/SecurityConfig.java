@@ -62,6 +62,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/user/**").permitAll()
                         .requestMatchers("/","/ws/**").permitAll()
                         .requestMatchers("/api/general/**").permitAll()
+                        .requestMatchers("/api/notification/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .httpBasic(Customizer.withDefaults()); // Configure HTTP Basic Authentication

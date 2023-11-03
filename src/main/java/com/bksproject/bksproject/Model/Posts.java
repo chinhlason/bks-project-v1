@@ -36,6 +36,10 @@ public class Posts {
 //    @JsonBackReference
     private Users user_post;
 
+    @OneToMany(mappedBy = "postId")
+    @JsonBackReference
+    private Set<Comments> post_comments;
+
     public Posts(String category, String title, String content, Users user_post) {
         this.createAt = Instant.now();
         this.category = category;

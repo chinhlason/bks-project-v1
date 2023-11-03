@@ -70,6 +70,18 @@ public class Users {
     @JsonBackReference
     private Set<Posts> posts;
 
+    @OneToMany(mappedBy = "userId")
+    @JsonBackReference
+    private Set<Comments> user_comments;
+
+    @OneToMany(mappedBy = "userNotification")
+    @JsonBackReference
+    private Set<Notification> notifications;
+
+    @OneToMany(mappedBy = "receiver")
+    @JsonBackReference
+    private Set<Notification> notificationsReceiver;
+
 //    public User() {
 //    }
 

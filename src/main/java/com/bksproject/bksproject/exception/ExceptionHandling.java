@@ -1,9 +1,7 @@
 package com.bksproject.bksproject.exception;
 
-import com.bksproject.bksproject.exception.System.EmailExistException;
-import com.bksproject.bksproject.exception.System.PostNotFoundException;
-import com.bksproject.bksproject.exception.System.UserNotFoundException;
-import com.bksproject.bksproject.exception.System.WrongLoginInforException;
+import com.bksproject.bksproject.Model.Notification;
+import com.bksproject.bksproject.exception.System.*;
 import org.springframework.security.authentication.BadCredentialsException;
 import com.bksproject.bksproject.payload.response.HttpResponse;
 import org.slf4j.Logger;
@@ -24,6 +22,9 @@ public class ExceptionHandling implements ErrorController {
     private static final String USER_NOT_FOUND = "User not found!";
     private static final String WRONG_INF_TO_LOGIN = "Username or password is incorrect!";
     private static final String POST_NOT_FOUND = "Post not found";
+
+    private static final String COMMENT_NOT_FOUND = "Comment not found";
+    private static final String NOTIFICATION_NOT_FOUND = "Notification not found";
 
 
     private ResponseEntity<HttpResponse> createHttpResponse(HttpStatus httpStatus, String message) {
@@ -57,5 +58,17 @@ public class ExceptionHandling implements ErrorController {
     public ResponseEntity<HttpResponse> postNotFoundException(PostNotFoundException exception) {
         LOGGER.warn(exception.getMessage());
         return createHttpResponse(BAD_REQUEST, POST_NOT_FOUND);
+    }
+
+    @ExceptionHandler(CommentNotFoundException.class)
+    public ResponseEntity<HttpResponse> commentNotFound(CommentNotFoundException exception) {
+        LOGGER.warn(exception.getMessage());
+        return createHttpResponse(BAD_REQUEST, COMMENT_NOT_FOUND);
+    }
+
+    @ExceptionHandler(NotificationException.class)
+    public ResponseEntity<HttpResponse> notificationException(NotificationException exception) {
+        LOGGER.warn(exception.getMessage());
+        return createHttpResponse(BAD_REQUEST, NOTIFICATION_NOT_FOUND);
     }
 }
