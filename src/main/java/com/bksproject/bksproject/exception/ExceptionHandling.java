@@ -19,12 +19,17 @@ public class ExceptionHandling implements ErrorController {
     private final Logger LOGGER = LoggerFactory.getLogger(getClass());
 
     private static final String EMAIL_EXIST = "Email is already taken!";
+
+    private static final String SERIAL_EXIST = "Serial is already exist!";
+
     private static final String USER_NOT_FOUND = "User not found!";
     private static final String WRONG_INF_TO_LOGIN = "Username or password is incorrect!";
     private static final String POST_NOT_FOUND = "Post not found";
 
     private static final String COMMENT_NOT_FOUND = "Comment not found";
     private static final String NOTIFICATION_NOT_FOUND = "Notification not found";
+
+    private static final String COURSE_SERIAL_NOT_FOUND = "Course's serial not found";
 
 
     private ResponseEntity<HttpResponse> createHttpResponse(HttpStatus httpStatus, String message) {
@@ -40,6 +45,12 @@ public class ExceptionHandling implements ErrorController {
     public ResponseEntity<HttpResponse> emailExistException(EmailExistException exception) {
         LOGGER.warn(exception.getMessage());
         return createHttpResponse(BAD_REQUEST, EMAIL_EXIST);
+    }
+
+    @ExceptionHandler(SerialExistException.class)
+    public ResponseEntity<HttpResponse> serialExistException(SerialExistException exception) {
+        LOGGER.warn(exception.getMessage());
+        return createHttpResponse(BAD_REQUEST, SERIAL_EXIST);
     }
 
     @ExceptionHandler(UserNotFoundException.class)
@@ -70,5 +81,11 @@ public class ExceptionHandling implements ErrorController {
     public ResponseEntity<HttpResponse> notificationException(NotificationException exception) {
         LOGGER.warn(exception.getMessage());
         return createHttpResponse(BAD_REQUEST, NOTIFICATION_NOT_FOUND);
+    }
+
+    @ExceptionHandler(CourseSerialNotFoundException.class)
+    public ResponseEntity<HttpResponse> courseSerialNotFoundException(CourseSerialNotFoundException exception) {
+        LOGGER.warn(exception.getMessage());
+        return createHttpResponse(BAD_REQUEST, COURSE_SERIAL_NOT_FOUND);
     }
 }

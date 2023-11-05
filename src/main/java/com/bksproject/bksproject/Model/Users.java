@@ -82,6 +82,14 @@ public class Users {
     @JsonBackReference
     private Set<Notification> notificationsReceiver;
 
+    @OneToMany(mappedBy = "userPurchase")
+    @JsonBackReference
+    private Set<Purchase> uPurchases;
+
+    @OneToOne(mappedBy = "userCurrent")
+    @JsonBackReference
+    private UserProcess uProcess;
+
 //    public User() {
 //    }
 
