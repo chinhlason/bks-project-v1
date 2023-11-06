@@ -16,9 +16,12 @@ public class NotificationResponse {
     private String message;
     private String type;
     private boolean read;
-    private Users userSend;
+    private String userSend;
 
-    public NotificationResponse(Long id, Instant createAt, String message, String type, boolean read, Users userSend) {
+    public NotificationResponse() {
+    }
+
+    public NotificationResponse(Long id, Instant createAt, String message, String type, boolean read, String userSend) {
         this.id = id;
         this.createAt = createAt;
         this.message = message;

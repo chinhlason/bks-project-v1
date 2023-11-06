@@ -23,14 +23,12 @@ public class UserProcess {
     @NotBlank
     private Boolean isComplete = false;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name="lesson_id", referencedColumnName = "ID")
-    @JsonManagedReference
+    @ManyToOne
+    @JoinColumn(name="lesson_ID", referencedColumnName = "ID")
     private Lessons lessonIdCurrent;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name="user_id", referencedColumnName = "ID")
-    @JsonManagedReference
     private Users userCurrent;
 
     public UserProcess(Lessons lessonIdCurrent, Users userCurrent) {

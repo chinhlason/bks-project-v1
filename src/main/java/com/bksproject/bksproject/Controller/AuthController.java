@@ -10,10 +10,9 @@ import com.bksproject.bksproject.Model.Users;
 import com.bksproject.bksproject.Repository.RoleRepository;
 import com.bksproject.bksproject.Repository.UserRepository;
 import com.bksproject.bksproject.Security.Cookie.cookieService;
-import com.bksproject.bksproject.Security.RefreshTokenService;
+import com.bksproject.bksproject.Service.RefreshTokenService;
 import com.bksproject.bksproject.Security.jwt.jwtUtil;
 import com.bksproject.bksproject.Service.UserDetailsImp;
-import com.bksproject.bksproject.exception.System.WrongLoginInforException;
 import com.bksproject.bksproject.exception.Token.TokenRefreshException;
 import com.bksproject.bksproject.payload.response.LoginResponse;
 import com.bksproject.bksproject.payload.response.MessageResponse;
@@ -107,7 +106,7 @@ public class AuthController {
         headers.add(HttpHeaders.SET_COOKIE, refreshTokenCookie.toString());
         return ResponseEntity.ok()
                 .headers(headers)
-                .body(new LoginResponse(token, userDetails.getId(),
+                .body(new LoginResponse(userDetails.getId(),
                         userDetails.getUsername(),userDetails.getFullname(),
                         userDetails.getPhone(), userDetails.getEmail(), userDetails.getAuthorities()));
     }

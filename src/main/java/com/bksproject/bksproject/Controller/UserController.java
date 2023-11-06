@@ -67,8 +67,9 @@ public class UserController {
 
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
     @GetMapping("list-all")
-    public List<Users> getAllUsers() {
-        return userRepository.findAll();
+    public ResponseEntity<List<UserInforResponse>> getAllUsers() {
+        List<Users> users = userRepository.findAll();
+        return new ResponseEntity<>(mapperService.mapList(users,customMapper), OK);
     }
 
     @PutMapping("/update")

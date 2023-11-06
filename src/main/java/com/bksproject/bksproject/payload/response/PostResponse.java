@@ -25,11 +25,14 @@ public class PostResponse {
 
     private String content;
 
-    private Users userPost;
+    private String userPost;
 
     private Set<CommentResponse> commentPost;
 
-    public PostResponse(Long id, Instant createAt, String category, String title, String content, Users userPost, Set<CommentResponse>  commentPost) {
+    public PostResponse() {
+    }
+
+    public PostResponse(Long id, Instant createAt, String category, String title, String content, String userPost, Set<CommentResponse>  commentPost) {
         this.id = id;
         this.createAt = createAt;
         this.category = category;

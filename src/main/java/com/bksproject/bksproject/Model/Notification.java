@@ -1,5 +1,6 @@
 package com.bksproject.bksproject.Model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.Getter;
@@ -31,10 +32,12 @@ public class Notification {
 
     @ManyToOne
     @JoinColumn(name="user_ID", referencedColumnName = "ID")
+    @JsonBackReference
     private Users userNotification;
 
     @ManyToOne
     @JoinColumn(name="receiver_id", referencedColumnName = "ID")
+    @JsonBackReference
     private Users receiver;
 
     public Notification(String message, Users userNotification, String type, Users receiver) {

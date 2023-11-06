@@ -13,8 +13,6 @@ import java.util.List;
 @Setter
 @Getter
 public class LoginResponse {
-    private String token;
-    private String type = "Bearer";
 //    private String refreshToken;
     private Long id;
     private String username;
@@ -22,9 +20,7 @@ public class LoginResponse {
     private String phone;
     private String email;
     private Collection<? extends GrantedAuthority> roles;
-    public LoginResponse(String accessToken, Long id, String username, String email, String fullname, String phone, Collection<? extends GrantedAuthority> roles) {
-        this.token = accessToken;
-//        this.refreshToken = refreshToken;
+    public LoginResponse(Long id, String username, String email, String fullname, String phone, Collection<? extends GrantedAuthority> roles) {
         this.id = id;
         this.username = username;
         this.email = email;

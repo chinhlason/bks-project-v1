@@ -2,8 +2,10 @@ package com.bksproject.bksproject.Controller;
 
 import com.bksproject.bksproject.DTO.CommentDTO;
 import com.bksproject.bksproject.DTO.PostDTO;
+import com.bksproject.bksproject.Enum.User_roles;
 import com.bksproject.bksproject.Model.Comments;
 import com.bksproject.bksproject.Model.Posts;
+import com.bksproject.bksproject.Model.Role;
 import com.bksproject.bksproject.Model.Users;
 import com.bksproject.bksproject.Repository.CommentRepository;
 import com.bksproject.bksproject.Repository.PostRepository;
@@ -38,6 +40,7 @@ import java.time.Instant;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "http://localhost:3000",maxAge = 3600,allowCredentials = "true")
 @RestController
@@ -50,7 +53,7 @@ public class PostController {
     private PostRepository postRepository;
 
     @Autowired
-    private ModelMapperService modelMapperService;
+    private ModelMapperService mapperService;
 
     @Autowired
     private CommentRepository commentRepository;
@@ -82,28 +85,19 @@ public class PostController {
     }
 
     @GetMapping("/general/post/get-all-post")
-    public List<Posts> getAll(){
+    public ResponseEntity<?> getAll(){
         List<Posts> list = postRepository.findAll();
-        return list;
+        return ResponseEntity.ok(mapperService.mapList(list,customMapper));
     }
+
+
+
 
     @GetMapping("/general/post/current-post")
     public ResponseEntity<?> getCurrentPost(@RequestParam("id") Long id) throws PostNotFoundException {
         String exception = "";
         Posts postCurrent = postRepository.findById(id).orElseThrow(() -> new PostNotFoundException(exception));
-        Set<CommentResponse> commentInPost = convertCommentsToCommentResponses(postCurrent.getPost_comments());
-        return ResponseEntity.ok()
-                .body(
-                        new PostResponse(
-                                postCurrent.getId(),
-                                postCurrent.getCreateAt(),
-                                postCurrent.getCategory(),
-                                postCurrent.getTitle(),
-                                postCurrent.getContent(),
-                                postCurrent.getUser_post(),
-                                commentInPost
-                        )
-                );
+        return ResponseEntity.ok(mapperService.mapObject(postCurrent,customMapper));
     }
 
     @PutMapping("/post/update")
@@ -152,14 +146,6 @@ public class PostController {
         return new ResponseEntity(new MessageResponse("Comment created succesfully"),HttpStatus.OK);
     }
 
-//    @GetMapping("/general/post/get-all-comment-in-post")
-//    public List<Comments> getCommentInCurrentPost(@RequestParam("id") Long postId) throws PostNotFoundException{
-//        String exception = "";
-//        Posts currentPost = postRepository.findById(postId).orElseThrow(() -> new PostNotFoundException(exception));
-//
-//    }
-
-
     public static Set<CommentResponse> convertCommentsToCommentResponses(Set<Comments> comments) {
         Set<CommentResponse> commentResponses = new HashSet<>();
 
@@ -168,11 +154,20 @@ public class PostController {
                     comment.getId(),
                     comment.getCreateAt(),
                     comment.getContent(),
-                    comment.getUserId()
+//                    comment.getUserId().getUsername()
+                    "sonnvt"
             );
             commentResponses.add(commentResponse);
         }
 
         return commentResponses;
     }
+
+    public CustomMapper<Posts, PostResponse> customMapper = posts1 -> {
+        PostResponse postResponse = mapper.map(posts1,PostResponse.class);
+        Set<CommentResponse> commentResponses = convertCommentsToCommentResponses(posts1.getPost_comments());
+        postResponse.setCommentPost(commentResponses);
+        postResponse.setUserPost(posts1.getUser_post().getUsername());
+        return postResponse;
+    };
 }

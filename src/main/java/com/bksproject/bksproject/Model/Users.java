@@ -66,30 +66,34 @@ public class Users {
     @JsonManagedReference
     private Set<Role> roles = new HashSet<>();
 
-    @OneToMany(mappedBy = "user_post")
-    @JsonBackReference
+    @OneToMany(mappedBy = "user_post", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JsonManagedReference
     private Set<Posts> posts;
 
-    @OneToMany(mappedBy = "userId")
-    @JsonBackReference
+    @OneToMany(mappedBy = "userId", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JsonManagedReference
     private Set<Comments> user_comments;
 
-    @OneToMany(mappedBy = "userNotification")
-    @JsonBackReference
+    @OneToMany(mappedBy = "userNotification", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JsonManagedReference
     private Set<Notification> notifications;
 
-    @OneToMany(mappedBy = "receiver")
-    @JsonBackReference
+    @OneToMany(mappedBy = "receiver", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JsonManagedReference
     private Set<Notification> notificationsReceiver;
 
-    @OneToMany(mappedBy = "userPurchase")
-    @JsonBackReference
+    @OneToMany(mappedBy = "userPurchase", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JsonManagedReference
     private Set<Purchase> uPurchases;
 
-    @OneToOne(mappedBy = "userCurrent")
-    @JsonBackReference
-    private UserProcess uProcess;
+    @OneToMany(mappedBy = "userCurrent", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JsonManagedReference
+    private Set<UserProcess> uProcess;
 
+    @OneToOne(mappedBy = "userIdReset", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JsonBackReference
+    private ResetPasswordToken resetPasswordToken;
+//
 //    public User() {
 //    }
 

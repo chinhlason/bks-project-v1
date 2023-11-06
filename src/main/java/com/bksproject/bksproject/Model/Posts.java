@@ -1,6 +1,7 @@
 package com.bksproject.bksproject.Model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -33,11 +34,11 @@ public class Posts {
 
     @ManyToOne
     @JoinColumn(name="userID", referencedColumnName = "ID")
-//    @JsonBackReference
+    @JsonBackReference
     private Users user_post;
 
-    @OneToMany(mappedBy = "postId")
-    @JsonBackReference
+    @OneToMany(mappedBy = "postId", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JsonManagedReference
     private Set<Comments> post_comments;
 
     public Posts(String category, String title, String content, Users user_post) {

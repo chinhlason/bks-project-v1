@@ -14,12 +14,12 @@ public class CommentResponse {
     private Long id;
     private Instant createAt;
     private String content;
-    private Users userComment;
+    private String username;
 
-    public CommentResponse(Long id, Instant createAt, String content, Users userComment) {
+    public CommentResponse(Long id, Instant createAt, String content, String username) {
         this.id = id;
         this.createAt = createAt;
         this.content = content;
-        this.userComment = userComment;
+        this.username = username;
     }
 }

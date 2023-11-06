@@ -1,6 +1,6 @@
 package com.bksproject.bksproject.Configuration;
 
-import com.bksproject.bksproject.Security.UserDetailsServiceCustom;
+import com.bksproject.bksproject.Service.UserDetailsServiceCustom;
 import com.bksproject.bksproject.Security.jwt.DenyAccessHandle;
 import com.bksproject.bksproject.Security.jwt.jwtAuthenticationFilter;
 import com.bksproject.bksproject.Security.jwt.jwtEntrypoint;

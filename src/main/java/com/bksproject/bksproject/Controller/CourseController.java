@@ -249,27 +249,52 @@ public class CourseController {
         );
     }
 
-//    @GetMapping("/mark-user-process")
-//    ResponseEntity<?> markLearned(@RequestParam("id") Long lessonId, Authentication authentication) throws UserNotFoundException{
-//        String username = authentication.getName();
-//        Users user = userRepository.findByUsername(username).orElseThrow(() -> new UserNotFoundException(username));
-//        Lessons lesson = lessonRepository.findLessonsById(lessonId);
-//        UserProcess userProcess = new UserProcess(
-//                lesson,
-//                user
-//        );
-//        userProcess.setIsComplete();
-//        processRepository.save(userProcess);
-//        return ResponseEntity.ok().body(new MessageResponse("Mark/Unmark success!"));
-//    }
+    @PostMapping ("/create-user-process")
+    ResponseEntity<?> createMark(@RequestParam("id") Long lessonId, Authentication authentication) throws UserNotFoundException{
+        String username = authentication.getName();
+        Users user = userRepository.findByUsername(username).orElseThrow(() -> new UserNotFoundException(username));
+        Lessons lesson = lessonRepository.findLessonsById(lessonId);
+        UserProcess _userProcess = processRepository.findUserProcessByUserIdAndLessonId(user.getId(), lessonId);
+        if(_userProcess == null){
+            UserProcess userProcess = new UserProcess(
+                    lesson,
+                    user
+            );
+            userProcess.setIsComplete();
+            processRepository.save(userProcess);
+            return ResponseEntity.ok().body(new MessageResponse("Create Mark/Unmark success!"));
+        }
+        return ResponseEntity.badRequest().body(new HttpResponse(HttpStatus.BAD_REQUEST.value(),HttpStatus.BAD_REQUEST,"","User process in this lesson already exist"));
+    }
 
-//    @GetMapping("/get-user-process")
-//    ResponseEntity<?> getUserProcessInLesson(@RequestParam("id") Long lessonId, Authentication authentication) throws UserNotFoundException{
-//        String username = authentication.getName();
-//        Users user = userRepository.findByUsername(username).orElseThrow(() -> new UserNotFoundException(username));
-//        UserProcess userProcess = processRepository.findByLessonId(lessonId);
-//        return ResponseEntity.ok().body(userProcess);
-//    }
+    @PutMapping("/change-user-process")
+    ResponseEntity<?> changeMark(@RequestParam("id") Long lessonId, Authentication authentication) throws UserNotFoundException{
+        String username = authentication.getName();
+        Users user = userRepository.findByUsername(username).orElseThrow(() -> new UserNotFoundException(username));
+        UserProcess userProcess = processRepository.findUserProcessByUserIdAndLessonId(user.getId(), lessonId);
+        userProcess.setIsComplete();
+        processRepository.save(userProcess);
+        return ResponseEntity.ok().body(new MessageResponse("Change Mark/Unmark success!"));
+    }
+
+    @GetMapping("/get-user-process")
+    ResponseEntity<?> getMark(@RequestParam("id") Long lessonId, Authentication authentication) throws UserNotFoundException{
+        String username = authentication.getName();
+        Users user = userRepository.findByUsername(username).orElseThrow(() -> new UserNotFoundException(username));
+        Lessons lesson = lessonRepository.findLessonsById(lessonId);
+        UserProcess userProcess = processRepository.findUserProcessByUserIdAndLessonId(user.getId(), lessonId);
+        if(userProcess != null) {
+            return ResponseEntity.ok().body(
+                    new UserProcessResponse(
+                            userProcess.getId(),
+                            lesson.getId(),
+                            lesson.getTitle(),
+                            userProcess.getIsComplete()
+                    )
+            );
+        }
+        return ResponseEntity.badRequest().body(new HttpResponse(HttpStatus.BAD_REQUEST.value(),HttpStatus.BAD_REQUEST,"","User process didn't exist"));
+    }
 
     public List<Courses> getOwnCourseFromPurchase(List<Purchase> purchases) {
         List<Courses> courses = new ArrayList<>();

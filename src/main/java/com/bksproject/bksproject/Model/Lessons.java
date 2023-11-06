@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.Instant;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -34,9 +35,9 @@ public class Lessons {
     @JsonBackReference
     private Media media;
 
-    @OneToOne(mappedBy = "lessonIdCurrent")
+    @OneToMany(mappedBy = "lessonIdCurrent")
     @JsonBackReference
-    private UserProcess lessonProcess;
+    private Set<UserProcess> lessonProcess;
 
     public Lessons(String title, String description, Courses courseId) {
         this.createAt = Instant.now();

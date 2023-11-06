@@ -1,5 +1,7 @@
 package com.bksproject.bksproject.Model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
@@ -24,10 +26,12 @@ public class Comments {
 
     @ManyToOne
     @JoinColumn(name="userID", referencedColumnName = "ID")
+    @JsonBackReference
     private Users userId;
 
     @ManyToOne
     @JoinColumn(name="postID", referencedColumnName = "ID")
+    @JsonBackReference
     private Posts postId;
 
 

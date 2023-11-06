@@ -1,4 +1,4 @@
-package com.bksproject.bksproject.Security;
+package com.bksproject.bksproject.Service;
 
 import com.bksproject.bksproject.Model.RefreshToken;
 import com.bksproject.bksproject.Repository.RefreshTokenRepository;
