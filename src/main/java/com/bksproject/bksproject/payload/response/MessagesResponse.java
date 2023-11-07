@@ -1,9 +1,9 @@
 package com.bksproject.bksproject.payload.response;
 
-public class MessageResponse {
+public class MessagesResponse {
     private String message;
 
-    public MessageResponse(String message) {
+    public MessagesResponse(String message) {
         this.message = message;
     }
 

@@ -90,7 +90,7 @@ public class Users {
     @JsonManagedReference
     private Set<UserProcess> uProcess;
 
-    @OneToOne(mappedBy = "userIdReset", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "userIdReset")
     @JsonBackReference
     private ResetPasswordToken resetPasswordToken;
 //

@@ -10,8 +10,7 @@ import com.bksproject.bksproject.advice.CustomMapper;
 import com.bksproject.bksproject.exception.System.EmailExistException;
 import com.bksproject.bksproject.exception.System.UserNotFoundException;
 import com.bksproject.bksproject.payload.request.UpdateUserRequest;
-import com.bksproject.bksproject.payload.response.LoginResponse;
-import com.bksproject.bksproject.payload.response.MessageResponse;
+import com.bksproject.bksproject.payload.response.MessagesResponse;
 import com.bksproject.bksproject.payload.response.UserInforResponse;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
@@ -22,12 +21,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -73,7 +69,8 @@ public class UserController {
     }
 
     @PutMapping("/update")
-    public ResponseEntity<?> updateByUsername(@RequestParam("username") String username, @Valid @RequestBody UpdateUserRequest infoUpdate) throws UserNotFoundException,EmailExistException {
+    public ResponseEntity<?> updateByUsername(Authentication authentication, @Valid @RequestBody UpdateUserRequest infoUpdate) throws UserNotFoundException,EmailExistException {
+        String username = authentication.getName();
         Users user = userRepository.findByUsername(username).orElseThrow(() -> new UserNotFoundException(username));
         if(!user.getEmail().equals(infoUpdate.getEmail())){
             user.setEmail(infoUpdate.getEmail());
@@ -84,8 +81,7 @@ public class UserController {
         user.setFullname(infoUpdate.getFullname());
         user.setPhone(infoUpdate.getPhone());
         userRepository.save(user);
-        return new ResponseEntity(new MessageResponse("Update succesfully"), OK);
-
+        return new ResponseEntity(new MessagesResponse("Update succesfully"), OK);
     }
 
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
@@ -104,9 +100,9 @@ public class UserController {
             Users userInfor = userRepository.findByUsername(userDetailsImp.getUsername()).orElseThrow(() -> new UserNotFoundException(userDetailsImp.getUsername()));
             userInfor.setPassword(encoder.encode(newPassword));
             userRepository.save(userInfor);
-            return new ResponseEntity<>(new MessageResponse("Password has changed"), OK);
+            return new ResponseEntity<>(new MessagesResponse("Password has changed"), OK);
         }catch (Exception e){
-            return new ResponseEntity<>(new MessageResponse("Wrong password"), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new MessagesResponse("Wrong password"), HttpStatus.BAD_REQUEST);
         }
     }
 

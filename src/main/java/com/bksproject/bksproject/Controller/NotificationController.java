@@ -1,10 +1,7 @@
 package com.bksproject.bksproject.Controller;
 
-import com.bksproject.bksproject.DTO.PostDTO;
 import com.bksproject.bksproject.Enum.NotificationTypes;
-import com.bksproject.bksproject.Model.Comments;
 import com.bksproject.bksproject.Model.Notification;
-import com.bksproject.bksproject.Model.Posts;
 import com.bksproject.bksproject.Model.Users;
 import com.bksproject.bksproject.Repository.NotificationRepository;
 import com.bksproject.bksproject.Repository.UserRepository;
@@ -15,7 +12,6 @@ import com.bksproject.bksproject.exception.System.UserNotFoundException;
 import com.bksproject.bksproject.payload.request.PaymentRequest;
 import com.bksproject.bksproject.payload.response.*;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Email;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,12 +21,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.Instant;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "http://localhost:3000",maxAge = 3600,allowCredentials = "true")
 @RestController
@@ -64,7 +55,7 @@ public class NotificationController {
             receiver
         );
         notificationRepository.save(notification);
-        return ResponseEntity.ok().body(new MessageResponse("Create notification success!"));
+        return ResponseEntity.ok().body(new MessagesResponse("Create notification success!"));
     }
 
     @PostMapping("/notification/admin/create")
@@ -86,7 +77,7 @@ public class NotificationController {
                 receiver
         );
         notificationRepository.save(notification);
-        return ResponseEntity.ok().body(new MessageResponse("Create notification success!"));
+        return ResponseEntity.ok().body(new MessagesResponse("Create notification success!"));
     }
 
     @PostMapping("/notification/system/create")
@@ -108,7 +99,7 @@ public class NotificationController {
                 receiver
         );
         notificationRepository.save(notification);
-        return ResponseEntity.ok().body(new MessageResponse("Create notification success!"));
+        return ResponseEntity.ok().body(new MessagesResponse("Create notification success!"));
     }
 
     public CustomMapper<Notification, NotificationResponse> customMapper = notification -> {
@@ -155,9 +146,9 @@ public class NotificationController {
         if(notifications.contains(notification)){
             notification.setRead(true);
             notificationRepository.save(notification);
-            return ResponseEntity.ok(new MessageResponse("Action succesfully"));
+            return ResponseEntity.ok(new MessagesResponse("Action succesfully"));
         }
-        return ResponseEntity.ok(new MessageResponse("Action failed"));
+        return ResponseEntity.ok(new MessagesResponse("Action failed"));
         }
 
 //    public List<NotificationResponse> convertNotificationListToResponseList(List<Notification> notifications) {

@@ -2,45 +2,32 @@ package com.bksproject.bksproject.Controller;
 
 import com.bksproject.bksproject.DTO.CommentDTO;
 import com.bksproject.bksproject.DTO.PostDTO;
-import com.bksproject.bksproject.Enum.User_roles;
 import com.bksproject.bksproject.Model.Comments;
 import com.bksproject.bksproject.Model.Posts;
-import com.bksproject.bksproject.Model.Role;
 import com.bksproject.bksproject.Model.Users;
 import com.bksproject.bksproject.Repository.CommentRepository;
 import com.bksproject.bksproject.Repository.PostRepository;
 import com.bksproject.bksproject.Repository.UserRepository;
 import com.bksproject.bksproject.Service.ModelMapperService;
-import com.bksproject.bksproject.Service.UserDetailsImp;
 import com.bksproject.bksproject.advice.CustomMapper;
 import com.bksproject.bksproject.exception.System.PostNotFoundException;
 import com.bksproject.bksproject.exception.System.UserNotFoundException;
 import com.bksproject.bksproject.payload.request.UpdatePostRequest;
-import com.bksproject.bksproject.payload.request.UpdateUserRequest;
 import com.bksproject.bksproject.payload.response.*;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import jakarta.annotation.security.PermitAll;
-import jakarta.persistence.*;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.Instant;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "http://localhost:3000",maxAge = 3600,allowCredentials = "true")
 @RestController
@@ -81,7 +68,7 @@ public class PostController {
         }
         Posts post = new Posts(postDTO.getCategory(), postDTO.getTitle(), postDTO.getContent() , user);
         postRepository.save(post);
-        return ResponseEntity.ok().body(new MessageResponse("Create post success!"));
+        return ResponseEntity.ok().body(new MessagesResponse("Create post success!"));
     }
 
     @GetMapping("/general/post/get-all-post")
@@ -128,7 +115,7 @@ public class PostController {
         String exception = "";
         Posts deletePost = postRepository.findById(id).orElseThrow(() -> new PostNotFoundException(exception));
         postRepository.deleteById(id);
-        return new ResponseEntity(new MessageResponse("Delete succesfully"),HttpStatus.OK);
+        return new ResponseEntity(new MessagesResponse("Delete succesfully"),HttpStatus.OK);
     }
 
     @PostMapping("/post/comment")
@@ -143,7 +130,7 @@ public class PostController {
         Posts postComment = postRepository.findById(postId).orElseThrow(() -> new PostNotFoundException(exception));
         Comments commentCreate = new Comments(commentDTO.getContent(), user, postComment);
         commentRepository.save(commentCreate);
-        return new ResponseEntity(new MessageResponse("Comment created succesfully"),HttpStatus.OK);
+        return new ResponseEntity(new MessagesResponse("Comment created succesfully"),HttpStatus.OK);
     }
 
     public static Set<CommentResponse> convertCommentsToCommentResponses(Set<Comments> comments) {

@@ -69,7 +69,7 @@ public class CourseController {
                 courseRequest.getPrice()
                 );
         courseRepository.save(courses);
-        return ResponseEntity.ok().body(new MessageResponse("Create course success!"));
+        return ResponseEntity.ok().body(new MessagesResponse("Create course success!"));
     }
 
     @PostMapping("admin/lesson/create")
@@ -95,7 +95,7 @@ public class CourseController {
 
         lessonRepository.save(lesson);
         mediaRepository.save(media);
-        return ResponseEntity.ok().body(new MessageResponse("Create lesson success!"));
+        return ResponseEntity.ok().body(new MessagesResponse("Create lesson success!"));
     }
 
     @GetMapping("course")
@@ -203,7 +203,7 @@ public class CourseController {
         course.setSerial(courseRequest.getSerial());
         courseRepository.save(course);
 
-        return ResponseEntity.ok().body(new MessageResponse("Update course success!"));
+        return ResponseEntity.ok().body(new MessagesResponse("Update course success!"));
     }
 
     @PutMapping("/lesson/update")
@@ -225,7 +225,7 @@ public class CourseController {
         lessonRepository.save(lesson);
         mediaRepository.save(media);
 
-        return ResponseEntity.ok().body(new MessageResponse("Update lesson success!"));
+        return ResponseEntity.ok().body(new MessagesResponse("Update lesson success!"));
     }
 
     @GetMapping("/course/get-all-lesson")
@@ -262,7 +262,7 @@ public class CourseController {
             );
             userProcess.setIsComplete();
             processRepository.save(userProcess);
-            return ResponseEntity.ok().body(new MessageResponse("Create Mark/Unmark success!"));
+            return ResponseEntity.ok().body(new MessagesResponse("Create Mark/Unmark success!"));
         }
         return ResponseEntity.badRequest().body(new HttpResponse(HttpStatus.BAD_REQUEST.value(),HttpStatus.BAD_REQUEST,"","User process in this lesson already exist"));
     }
@@ -274,7 +274,7 @@ public class CourseController {
         UserProcess userProcess = processRepository.findUserProcessByUserIdAndLessonId(user.getId(), lessonId);
         userProcess.setIsComplete();
         processRepository.save(userProcess);
-        return ResponseEntity.ok().body(new MessageResponse("Change Mark/Unmark success!"));
+        return ResponseEntity.ok().body(new MessagesResponse("Change Mark/Unmark success!"));
     }
 
     @GetMapping("/get-user-process")

@@ -15,7 +15,7 @@ import com.bksproject.bksproject.Security.jwt.jwtUtil;
 import com.bksproject.bksproject.Service.UserDetailsImp;
 import com.bksproject.bksproject.exception.Token.TokenRefreshException;
 import com.bksproject.bksproject.payload.response.LoginResponse;
-import com.bksproject.bksproject.payload.response.MessageResponse;
+import com.bksproject.bksproject.payload.response.MessagesResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpHeaders;
@@ -127,7 +127,7 @@ public class AuthController {
                     headers.add(HttpHeaders.SET_COOKIE, refreshTokenCookie.toString());
                     return ResponseEntity.ok()
                             .headers(headers)
-                            .body(new MessageResponse("Token is refreshed successfully!"));
+                            .body(new MessagesResponse("Token is refreshed successfully!"));
                 })
                 .orElseThrow(() -> new TokenRefreshException(requestRefreshToken,
                         "Refresh token is not in database!"));
@@ -147,6 +147,6 @@ public class AuthController {
         headers.add(HttpHeaders.SET_COOKIE, jwtRefreshCookieCleared.toString());
         return ResponseEntity.ok()
                 .headers(headers)
-                .body(new MessageResponse("You've been signed out!"));
+                .body(new MessagesResponse("You've been signed out!"));
     }
 }

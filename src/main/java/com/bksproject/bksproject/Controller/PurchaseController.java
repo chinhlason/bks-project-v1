@@ -6,17 +6,14 @@ import com.bksproject.bksproject.Repository.PurchaseRepository;
 import com.bksproject.bksproject.Repository.UserRepository;
 import com.bksproject.bksproject.exception.System.CourseSerialNotFoundException;
 import com.bksproject.bksproject.exception.System.UserNotFoundException;
-import com.bksproject.bksproject.payload.request.LessonRequest;
 import com.bksproject.bksproject.payload.request.PurchaseUpdateRequest;
-import com.bksproject.bksproject.payload.response.LessonResponse;
-import com.bksproject.bksproject.payload.response.MessageResponse;
+import com.bksproject.bksproject.payload.response.MessagesResponse;
 import com.bksproject.bksproject.payload.response.PurchaseResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Instant;
@@ -55,7 +52,7 @@ public class PurchaseController {
                 course
         );
         purchaseRepository.save(purchase);
-        return new ResponseEntity<>(new MessageResponse("Purchase created success!"), OK);
+        return new ResponseEntity<>(new MessagesResponse("Purchase created success!"), OK);
     }
 
     @GetMapping("admin/get-all-purchase")
@@ -96,7 +93,7 @@ public class PurchaseController {
         purchase.setUserPurchase(user);
         purchase.setCoursePurchase(course);
         purchaseRepository.save(purchase);
-        return ResponseEntity.ok().body(new MessageResponse("Update purchase success!"));
+        return ResponseEntity.ok().body(new MessagesResponse("Update purchase success!"));
     }
 
     public List<PurchaseResponse> getPurchaseResponseFromList(List<Purchase> purchases) throws UserNotFoundException{
