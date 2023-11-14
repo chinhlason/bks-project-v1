@@ -1,4 +1,4 @@
-package com.bksproject.bksproject.Service;
+package com.bksproject.bksproject.Service.Impl;
 
 
 import com.bksproject.bksproject.Model.ResetPasswordToken;

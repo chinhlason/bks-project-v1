@@ -4,7 +4,7 @@ import com.bksproject.bksproject.Model.ResetPasswordToken;
 import com.bksproject.bksproject.Model.Users;
 import com.bksproject.bksproject.Repository.ResetPasswordTokenRepository;
 import com.bksproject.bksproject.Repository.UserRepository;
-import com.bksproject.bksproject.Service.MailjetService;
+import com.bksproject.bksproject.Service.Impl.MailjetService;
 import com.bksproject.bksproject.exception.System.UserNotFoundException;
 import com.bksproject.bksproject.payload.response.HttpResponse;
 import com.mailjet.client.errors.MailjetException;

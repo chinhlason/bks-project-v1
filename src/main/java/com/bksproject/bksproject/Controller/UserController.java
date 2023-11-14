@@ -5,7 +5,7 @@ import com.bksproject.bksproject.Model.Role;
 import com.bksproject.bksproject.Model.Users;
 import com.bksproject.bksproject.Repository.UserRepository;
 import com.bksproject.bksproject.Service.ModelMapperService;
-import com.bksproject.bksproject.Service.UserDetailsImp;
+import com.bksproject.bksproject.Service.Impl.UserDetailsImp;
 import com.bksproject.bksproject.advice.CustomMapper;
 import com.bksproject.bksproject.exception.System.EmailExistException;
 import com.bksproject.bksproject.exception.System.UserNotFoundException;

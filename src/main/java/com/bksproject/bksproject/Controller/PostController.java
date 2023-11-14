@@ -2,12 +2,14 @@ package com.bksproject.bksproject.Controller;
 
 import com.bksproject.bksproject.DTO.CommentDTO;
 import com.bksproject.bksproject.DTO.PostDTO;
+import com.bksproject.bksproject.DTO.PostPageDTO;
 import com.bksproject.bksproject.Model.Comments;
 import com.bksproject.bksproject.Model.Posts;
 import com.bksproject.bksproject.Model.Users;
 import com.bksproject.bksproject.Repository.CommentRepository;
 import com.bksproject.bksproject.Repository.PostRepository;
 import com.bksproject.bksproject.Repository.UserRepository;
+import com.bksproject.bksproject.Service.IPostService;
 import com.bksproject.bksproject.Service.ModelMapperService;
 import com.bksproject.bksproject.advice.CustomMapper;
 import com.bksproject.bksproject.exception.System.PostNotFoundException;
@@ -18,6 +20,8 @@ import com.bksproject.bksproject.payload.response.*;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -51,6 +55,9 @@ public class PostController {
     @Autowired
     private AuthenticationManager authenticationManager;
 
+    @Autowired
+    private IPostService postService;
+
     private Posts posts;
 
 
@@ -66,7 +73,8 @@ public class PostController {
         } else if (postDTO.getContent().isEmpty()) {
             return ResponseEntity.badRequest().body(new HttpResponse(HttpStatus.BAD_REQUEST.value(),HttpStatus.BAD_REQUEST,"","Content can not be empty"));
         }
-        Posts post = new Posts(postDTO.getCategory(), postDTO.getTitle(), postDTO.getContent() , user);
+        String content = postDTO.getContent().replace("\n", "\\n").replace("\t", "\\t");
+        Posts post = new Posts(postDTO.getCategory(), postDTO.getTitle(), content , user);
         postRepository.save(post);
         return ResponseEntity.ok().body(new MessagesResponse("Create post success!"));
     }
@@ -77,7 +85,18 @@ public class PostController {
         return ResponseEntity.ok(mapperService.mapList(list,customMapper));
     }
 
-
+    @GetMapping("/general/post/get-all-posts")
+    public ResponseEntity<?> getAllPost(@RequestParam("page") int page, @RequestParam("limit") int limit){
+        Pageable pageable = PageRequest.of(page - 1, limit );
+        List<PostResponse> postResponses = postService.findAllPostInCurrentPage(pageable);
+        int totalPage = (int) Math.ceil((double) postService.totalItems() / limit);
+        return ResponseEntity.ok(
+                new PostPageDTO(
+                        totalPage,
+                        postResponses
+                )
+        );
+    }
 
 
     @GetMapping("/general/post/current-post")
@@ -141,8 +160,8 @@ public class PostController {
                     comment.getId(),
                     comment.getCreateAt(),
                     comment.getContent(),
-//                    comment.getUserId().getUsername()
-                    "sonnvt"
+                    comment.getUserId().getUsername()
+//                    "sonnvt"
             );
             commentResponses.add(commentResponse);
         }

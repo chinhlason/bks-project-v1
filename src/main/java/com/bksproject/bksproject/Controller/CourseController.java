@@ -1,7 +1,10 @@
 package com.bksproject.bksproject.Controller;
 
+import com.bksproject.bksproject.DTO.CourseDTO;
+import com.bksproject.bksproject.DTO.PostPageDTO;
 import com.bksproject.bksproject.Model.*;
 import com.bksproject.bksproject.Repository.*;
+import com.bksproject.bksproject.Service.ICourseService;
 import com.bksproject.bksproject.exception.System.CourseSerialNotFoundException;
 import com.bksproject.bksproject.exception.System.SerialExistException;
 import com.bksproject.bksproject.exception.System.UserNotFoundException;
@@ -10,6 +13,8 @@ import com.bksproject.bksproject.payload.request.LessonRequest;
 import com.bksproject.bksproject.payload.response.*;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -40,6 +45,9 @@ public class CourseController {
 
     @Autowired
     private UserProcessRepository processRepository;
+
+    @Autowired
+    private ICourseService courseService;
 
     @PostMapping("admin/course/create")
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
@@ -158,6 +166,19 @@ public class CourseController {
         List<Courses> courses = courseRepository.findAll();
 
         return courses;
+    }
+
+    @GetMapping("general/get-course-by-type")
+    public ResponseEntity<?> getCourseByType(@RequestParam("type") String type, @RequestParam("page") int page, @RequestParam("limit") int limit){
+        Pageable pageable = PageRequest.of(page - 1, limit );
+        List<Courses> courses = courseService.findAllCourseByType(pageable, type);
+        int totalPage = (int) Math.ceil((double) courseRepository.findAllCoursesBySerialType(type).size() / limit);
+        return ResponseEntity.ok().body(
+                new CourseDTO(
+                        totalPage,
+                        courses
+                )
+        );
     }
 
     @GetMapping("/get-own-course")

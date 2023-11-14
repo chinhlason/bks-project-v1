@@ -12,7 +12,7 @@ import com.bksproject.bksproject.Repository.UserRepository;
 import com.bksproject.bksproject.Security.Cookie.cookieService;
 import com.bksproject.bksproject.Service.RefreshTokenService;
 import com.bksproject.bksproject.Security.jwt.jwtUtil;
-import com.bksproject.bksproject.Service.UserDetailsImp;
+import com.bksproject.bksproject.Service.Impl.UserDetailsImp;
 import com.bksproject.bksproject.exception.Token.TokenRefreshException;
 import com.bksproject.bksproject.payload.response.LoginResponse;
 import com.bksproject.bksproject.payload.response.MessagesResponse;

@@ -1,11 +1,10 @@
-package com.bksproject.bksproject.Service;
+package com.bksproject.bksproject.Service.Impl;
 
 
 import com.bksproject.bksproject.Model.Users;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserCache;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
